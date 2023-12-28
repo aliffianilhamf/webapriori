@@ -1,0 +1,98 @@
+{% extends "aprioriapp/base.html" %} {% block content %} 
+
+<div class="container">
+  <h3 class="p-2">Selamat datang!</h3>
+  <form action="" method="post">
+    {% csrf_token %}
+    from : <input type="date" name="fromdate">
+    To : <input type="date" name="todate">
+    <button type="submit">Search</button>
+  </form>
+ 
+    <table class="table table-hover">
+        <thead class="table-dark text-center">
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Order No</th>
+            <th scope="col">Item</th>
+            <th scope="col">Order Time</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for transaksi in transaksis %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td >{{transaksi.order_no}}</td>
+                <td class="text-center">{{transaksi.item_name}}</td>
+                <td class="text-center">{{transaksi.order_time}}</td>
+              </tr>
+            {% endfor %}
+            {% for wkt in waktu  %}
+            <div>Waktu : {{wkt}}</div>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      {% if transaksis.has_previous %}
+      <a class="page-link" href="?page={{transaksis.previous_page_number}}"
+        >Previous</a
+      >
+      {% endif %}
+    </li>
+    <span class="p-1"
+      >page {{transaksis.number}} of {{transaksis.paginator.num_pages}}</span
+    >
+    <li class="page-item">
+      {% if transaksis.has_next %}
+      <a class="page-link" href="?page={{transaksis.next_page_number}}">Next</a>
+      {% endif %}
+    </li>
+  </ul>
+</nav>
+
+
+  {% if association_rules %}
+  <div class="container">
+    <table class="table table-hover">
+        <thead class="table-dark text-center">
+            <tr>
+                <th scope="col">Antecedents</th>
+                <th scope="col">Consequents</th>
+                <th scope="col">Support</th>
+                <th scope="col">Confidence</th>
+                <th scope="col">Lift</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rule in association_rules %}
+                <tr>
+                    <td scope="row" class="text-center">{{ rule.antecedents|join:", " }}</td>
+                    <td class="text-center">{{ rule.consequents |join:", " }}</td>
+                    <td class="text-center">{{ rule.support }}</td>
+                    <td class="text-center">{{ rule.confidence }}</td>
+                    <td class="text-center">{{ rule.lift }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+  <div class="container">
+  <div class="jumbotron jumbotron-fluid bg-secondary rounded-2">
+    <div class="container">
+      {% for rule in association_rules %}
+      <p class="lead">Jika Customer membeli {{rule.antecedents |join:", " }} Maka Juga Membeli {{rule.consequents |join:", " }}</p>
+      {% endfor %}
+      
+    </div>
+  </div>
+</div>
+{% else %}
+    <p>No association rules found.</p>
+{% endif %}
+
+
+
+{% endblock content %}

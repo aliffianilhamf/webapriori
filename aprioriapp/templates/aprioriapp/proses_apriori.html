@@ -1,0 +1,220 @@
+{% extends "aprioriapp/base.html" %} {% block content %}
+<!-- Recent Sales Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light rounded p-4">
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="form-row d-flex">
+        <div class="form-group col-md-6 me-2">
+          <label for="fromdate">From : </label>
+          <input
+            class="form-control bg-transparent"
+            type="date"
+            name="fromdate"
+            id="fromdate"
+            required
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="todate">To : </label>
+          <input
+            class="form-control bg-transparent"
+            type="date"
+            name="todate"
+            id="todate"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row d-flex">
+        <div class="form-group col-md-4 me-2">
+          <label for="support">Support</label>
+          <input
+            type="text"
+            class="form-control bg-transparent"
+            id="support"
+            name="support"
+            required
+          />
+        </div>
+        <div class="form-group col-md-4 me-2">
+          <label for="confidence">Confidence</label>
+          <input
+            type="text"
+            class="form-control bg-transparent"
+            id="confidence"
+            name="confidence"
+            required
+          />
+        </div>
+        <div class="form-check form-switch mt-4 ms-5">
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            ><a
+              type="button"
+              class="me-2 text-left border-0"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              >Extra Preprocessing?</a
+            ></label
+          >
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            name="extraPreprocessing"
+          />
+        </div>
+      </div>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                Extra Preprocessing
+              </h5>
+            </div>
+            <div class="modal-body">
+              <p style="text-align: left">
+                Extra Preprocessing disini bermaksud untuk menghapus semua
+                transaksi yang didalamnya hanya ada 1 item saja, sehingga akan
+                mengurangi jumlah dataset dan mengurangi varian dataset dan
+                memungkinkan untuk menemukan rule yang kuat antar produk
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--End modal-->
+      </div>
+      <button type="submit" class="btn btn-primary ms-2 mt-2">Proses</button>
+    </form>
+  </div>
+</div>
+<!-- Recent Sales End -->
+
+<!-- Recent Sales Start -->
+{% if transaksis %}
+<!-- Informasi dataset  -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div class="col-sm-6 col-xl-3">
+      <div
+        class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+      >
+        <i class="fa fa-chart-line fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Dataset</p>
+          <h6 class="mb-0">Warung Kopi Klotok</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div
+        class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+      >
+        <i class="fa fa-chart-bar fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">ukuran Dataset</p>
+          <h6 class="mb-0">{{ukuran_dataset}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div
+        class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+      >
+        <i class="fa fa-chart-area fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Jumlah Transaksi</p>
+          <h6 class="mb-0">{{jumlah_transaksi}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div
+        class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+      >
+        <i class="fa fa-chart-pie fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Jumlah Item</p>
+          <h6 class="mb-0">{{jumlah_item}}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- informasi dataset End -->
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light text-center rounded p-4">
+    <div class="d-flex align-items-center justify-content-start mb-4">
+      <h6 class="mb-0">Daftar Transaksi</h6>
+    </div>
+    <div class="table-responsive">
+      <table
+        class="table text-start align-middle table-bordered table-hover mb-0"
+      >
+        <thead>
+          <tr class="text-dark">
+            <th scope="col">No</th>
+            <th scope="col">Order No</th>
+            <th scope="col">Item Name</th>
+            <th scope="col">Order Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaksi in transaksis %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{transaksi.order_no}}</td>
+            <td>{{transaksi.item_name}}</td>
+            <td>{{transaksi.order_time}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--paginator-->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center mt-2">
+      <li class="page-item">
+        {% if transaksis.has_previous %}
+        <a class="page-link" href="?page={{transaksis.previous_page_number}}"
+          >Previous</a
+        >
+        {% endif %}
+      </li>
+      <span class="p-1"
+        >page {{transaksis.number}} of {{transaksis.paginator.num_pages}}</span
+      >
+      <li class="page-item">
+        {% if transaksis.has_next %}
+        <a class="page-link" href="?page={{transaksis.next_page_number}}"
+          >Next</a
+        >
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+</div>
+{% endif %}
+<!-- Recent Sales End -->
+<!-- Content End -->
+
+{% endblock content %}

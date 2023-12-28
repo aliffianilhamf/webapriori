@@ -1,0 +1,129 @@
+{% extends "aprioriapp/base.html" %} {% block content %}
+
+<!-- Recent Sales Start -->
+{% if association_rules %}
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light text-center rounded p-4">
+    <div class="d-flex align-items-center justify-content-start mb-4">
+      <h6 class="mb-0">Hasil Apriori</h6>
+    </div>
+    <div class="table-responsive">
+      <table
+        class="table text-start align-middle table-bordered table-hover mb-0"
+      >
+        <thead>
+          <tr class="text-dark">
+            <th scope="col">Antecedents</th>
+            <th scope="col">Consequents</th>
+            <th scope="col">Support</th>
+            <th scope="col">Confidence</th>
+            <th scope="col">Lift</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rule in association_rules %}
+          <tr>
+            <td>{{ rule.antecedents|join:", " }}</td>
+            <td>{{ rule.consequents |join:", " }}</td>
+            <td>{{ rule.support }}</td>
+            <td>{{ rule.confidence }}</td>
+            <td>{{ rule.lift }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- hasil rekomendasi-->
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light text-center rounded p-4">
+    <div class="d-flex align-items-center justify-content-start mb-4">
+      <h6 class="mb-0">Pola pembelian customer dari data yang dicari</h6>
+    </div>
+    <div class="table-responsive">
+      <table
+        class="table text-start align-middle table-bordered table-hover mb-0"
+      >
+        <tbody>
+          {% for rule in filtered_rules_list %}
+          <tr>
+            <td class="me-2 d-flex justify-content-between">
+              Jika Customer membeli {{rule.antecedents |join:", " }} Maka Ia
+              Juga Membeli {{rule.consequents |join:", " }}<a
+                type="button"
+                class="me-2 text-left border-0"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                >Details</a
+              >
+            </td>
+          </tr>
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    Jika Customer membeli {{rule.antecedents |join:", " }} Maka
+                    Ia Juga Membeli {{rule.consequents |join:", " }}
+                  </h5>
+                </div>
+                <div class="modal-body">
+                  <p style="text-align: left">Knowledge extraction</p>
+                  <ol>
+                    <li style="text-align: left; color: black">
+                      Dari Pola diatas, untuk boost pendapatan dapat kita buat
+                      paket promo {{rule.antecedents |join:", " }} dan
+                      {{rule.consequents |join:", " }}
+                    </li>
+                    <li style="text-align: left; color: black">
+                      Selain cara pertama, kita juga dapat menerapkan ketika
+                      kasir melayani customer yang awalnya hanya ingin membeli
+                      {{rule.antecedents |join:", " }} kemudian kita tawarkan
+                      {{rule.consequents |join:", " }} yang nantinya kemungkinan
+                      besar customer akan tertarik dan akhirnya membeli keduanya
+                    </li>
+                  </ol>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light text-center rounded p-4">
+    <h1>
+      Belum ada hasil untuk ditampilkan, silahkan melakukan proses apriori
+      terlebih dahulu!
+    </h1>
+  </div>
+</div>
+{% endif %}
+<!-- Recent Sales End -->
+
+<!-- Content End -->
+
+{% endblock content %}

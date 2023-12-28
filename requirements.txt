@@ -3,7 +3,7 @@ contourpy==1.2.0
 cycler==0.12.1
 defusedxml==0.7.1
 diff-match-patch==20230430
-Django
+Django 
 django-environ==0.11.2
 django-import-export==3.3.3
 et-xmlfile==1.1.0
